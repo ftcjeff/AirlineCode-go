@@ -1,4 +1,4 @@
-package ftcpops
+package main
 
 type AirlineCode struct {
 	Id       string `json:"id"`

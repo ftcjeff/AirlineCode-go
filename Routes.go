@@ -1,4 +1,4 @@
-package ftcpops
+package main
 
 import "net/http"
 
