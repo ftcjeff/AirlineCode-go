@@ -27,9 +27,16 @@ var routes = Routes{
 	},
 
 	Route{
+		"ShowById",
+		"GET",
+		"/airline/id/{Id}",
+		ShowById,
+	},
+
+	Route{
 		"Country",
 		"GET",
-		"/country/{country}",
+		"/airline/country/{country}",
 		Country,
 	},
 

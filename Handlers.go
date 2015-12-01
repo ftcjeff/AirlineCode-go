@@ -33,6 +33,19 @@ func Show(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func ShowById(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := strings.Trim(vars["Id"], " ")
+	airlineInfo := RepoFindAirlineId(id)
+
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+
+	if err := json.NewEncoder(w).Encode(airlineInfo); err != nil {
+		panic(err)
+	}
+}
+
 func Country(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	country := strings.Trim(vars["country"], " ")

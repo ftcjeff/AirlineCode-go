@@ -26,12 +26,12 @@ func init() {
 
 			go RepoCreateAirlineCode(
 				AirlineCode{Id: tokens[0],
-					Name:     tokens[2],
-					IATA:     tokens[0],
-					ICAO:     tokens[1],
-					CallSign: tokens[3],
-					Country:  tokens[4],
-					Comments: tokens[5]})
+					Name:     tokens[1],
+					IATA:     tokens[3],
+					ICAO:     tokens[4],
+					CallSign: tokens[5],
+					Country:  tokens[6],
+					Comments: tokens[7]})
 		}
 	}
 }
@@ -48,9 +48,19 @@ func RepoFindAirlineCodesByCountry(country string) AirlineCodes {
 	return rv
 }
 
-func RepoFindAirlineCode(id string) AirlineCode {
+func RepoFindAirlineId(id string) AirlineCode {
 	for _, t := range airlineCodes {
 		if t.Id == id {
+			return t
+		}
+	}
+
+	return AirlineCode{}
+}
+
+func RepoFindAirlineCode(iata string) AirlineCode {
+	for _, t := range airlineCodes {
+		if t.IATA == iata {
 			return t
 		}
 	}
@@ -64,13 +74,13 @@ func RepoCreateAirlineCode(t AirlineCode) AirlineCode {
 	return t
 }
 
-func RepoDestroyAirlineCode(id string) error {
+func RepoDestroyAirlineCode(iata string) error {
 	for i, t := range airlineCodes {
-		if t.Id == id {
+		if t.IATA == iata {
 			airlineCodes = append(airlineCodes[:i], airlineCodes[i+1:]...)
 			return nil
 		}
 	}
 
-	return fmt.Errorf("Could not find AirlineCode with id of %s to delete", id)
+	return fmt.Errorf("Could not find AirlineCode with id of %s to delete", iata)
 }
