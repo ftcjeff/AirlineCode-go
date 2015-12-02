@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"strings"
 )
@@ -15,6 +14,11 @@ func check(e error) {
 }
 
 func init() {
+	tableName := "airline"
+	tableFields := []string{"Id", "Name", "IATA", "ICAO", "CallSign", "Country", "Comments"}
+
+	CreateTable("127.0.0.1", "picasso", "picasso", "picasso", tableName)
+
 	dat, err := ioutil.ReadFile("airline_codes.csv")
 	check(err)
 
@@ -24,63 +28,11 @@ func init() {
 		if strings.Contains(line, ",") {
 			tokens := strings.Split(line, ",")
 
-			go RepoCreateAirlineCode(
-				AirlineCode{Id: tokens[0],
-					Name:     tokens[1],
-					IATA:     tokens[3],
-					ICAO:     tokens[4],
-					CallSign: tokens[5],
-					Country:  tokens[6],
-					Comments: tokens[7]})
+			if len(tokens[3]) == 0 {
+				continue
+			}
+
+			AddRow(tableName, tableFields, append(tokens[:2], tokens[3:]...))
 		}
 	}
-}
-
-func RepoFindAirlineCodesByCountry(country string) AirlineCodes {
-	var rv AirlineCodes
-
-	for _, t := range airlineCodes {
-		if t.Country == country {
-			rv = append(rv, t)
-		}
-	}
-
-	return rv
-}
-
-func RepoFindAirlineId(id string) AirlineCode {
-	for _, t := range airlineCodes {
-		if t.Id == id {
-			return t
-		}
-	}
-
-	return AirlineCode{}
-}
-
-func RepoFindAirlineCode(iata string) AirlineCode {
-	for _, t := range airlineCodes {
-		if t.IATA == iata {
-			return t
-		}
-	}
-
-	return AirlineCode{}
-}
-
-func RepoCreateAirlineCode(t AirlineCode) AirlineCode {
-	fmt.Println("Creating ", t)
-	airlineCodes = append(airlineCodes, t)
-	return t
-}
-
-func RepoDestroyAirlineCode(iata string) error {
-	for i, t := range airlineCodes {
-		if t.IATA == iata {
-			airlineCodes = append(airlineCodes[:i], airlineCodes[i+1:]...)
-			return nil
-		}
-	}
-
-	return fmt.Errorf("Could not find AirlineCode with id of %s to delete", iata)
 }
