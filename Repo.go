@@ -17,7 +17,8 @@ func init() {
 	tableName := "airline"
 	tableFields := []string{"Id", "Name", "IATA", "ICAO", "CallSign", "Country", "Comments"}
 
-	CreateTable("127.0.0.1", "picasso", "picasso", "picasso", tableName)
+	mysql := GetServiceURI("mysql")
+	CreateTable(mysql, "picasso", "picasso", "picasso", tableName)
 
 	dat, err := ioutil.ReadFile("airline_codes.csv")
 	check(err)
